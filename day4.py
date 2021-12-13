@@ -31,7 +31,6 @@ for num in num_seq:
     bingo = df[(df['amount-marked-row'] == 5) | (df['amount-marked-col'] == 5)]
     if len(bingo) > 0:
         bingo_index = bingo.index[0]
-        # start_row = 5*math.floor(bingo_index/5)
         start_row = 5*math.floor((bingo_index-1)/5)+1
         bingo_df = df.loc[start_row:start_row+4,0:4]    # loc referring to index and column names as opposed to integer position of cell 
         bingo_df = bingo_df.apply(pd.to_numeric)
@@ -64,7 +63,7 @@ for num in num_seq:
     # If bingo found
     if len(bingo) > 0:
         
-        # If only 1 board left when bingo found, calculate and orint score
+        # If only 1 board left when bingo found, calculate and print score
         if len(df) == 5:
             print("final score: ",df, bingo)
             df = df.iloc[:,0:5].apply(pd.to_numeric)
