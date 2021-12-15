@@ -1,7 +1,6 @@
 # Day 5 - Hydrothermal vents 
 
 # Part 1 - Track what positions have 2 or more vents located on them
-from typing import TYPE_CHECKING
 import pandas as pd
 import numpy as np
 
