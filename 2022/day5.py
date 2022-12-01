@@ -1,0 +1,4 @@
+f = open('day5.txt', 'r')
+content = f.read()
+print(content)
+f.close()
