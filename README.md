@@ -1,4 +1,4 @@
-# Advent-of-code-2021
+# Advent-of-code
 This repo details the working out of exercises on the Advent of code. 
 
 # Advent of Code Overview
