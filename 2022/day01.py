@@ -2,7 +2,7 @@ import os
 
 # Read in Data
 cwd = os.path.dirname(os.path.abspath(__file__))
-f = open(cwd+'/day1.txt', 'r')
+f = open(cwd+'/day01.txt', 'r')
 content = f.read()
 f.close()
 

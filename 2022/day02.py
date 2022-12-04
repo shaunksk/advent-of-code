@@ -1,7 +1,7 @@
 
 import os
 
-f = open(os.path.dirname(os.path.abspath(__file__)) + '/day2.txt', 'r')
+f = open(os.path.dirname(os.path.abspath(__file__)) + '/day02.txt', 'r')
 content = f.read()
 f.close()
 
