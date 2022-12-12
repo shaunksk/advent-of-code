@@ -1,59 +1,36 @@
 import os
 f = open(os.path.dirname(os.path.abspath(__file__)) + '/day07.txt', 'r')
 content = f.read()
-# print(content)
 f.close()
 
+## Part 1
 
-## assign value dictionary using location list tree
-def write_value(overall_dict, loc_list, new_value):
-    #tobe_eval = "overall_dict['"+"']['".join(loc_list) +"']"+ "=new_value"
-    # exec(tobe_eval)
-    #print(overall_dict,loc_list)
-    if len(loc_list) == 1:
-        print("assigning value", new_value,"with key", loc_list, "in", overall_dict)
-        if type(new_value) == list:
-            overall_dict[loc_list[0]] = new_value
-        else:
-            overall_dict[loc_list[0]].append(new_value)
-
-    else:
-        print(overall_dict, loc_list, new_value)
-        overall_dict[loc_list[0]] = write_value({},loc_list[1:], new_value)
-    #for key, value in overall_dict.items():
-    #    if key == loc_list[0]:
-    #        if type(value) == dict:
-    #            write(value, loc_list[1:],new_value)
-    #        else:
-    #            print("bottom value")
-    #            value = new_value
-
-   # dict['root'] = value
-    return overall_dict
-
-## instruct what actions done for each command
+# instruct what actions done for each terminal command
 total = {}
 
 def process_struct(current_loc, command,overall_dict = {},sum_val_dict ={}):
     cmd_pt1 = command.split(" ")[0] 
-    cmd_pt2 = command.split(" ")[-1] 
+    cmd_pt2 = command.split(" ")[-1]
 
+    # If command ic cd .. then write filepath value to final value dictionary and get rid of current path value in sum_val_dcit as we have finished counting files in that dictionary
     if command == "$ cd ..":
-        print(total,current_loc,sum_val_dict)
-        total[current_loc[-1]] = sum_val_dict[current_loc[-1]]
+        total['/'.join(current_loc)] = sum_val_dict['/'.join(current_loc)]
+        sum_val_dict.pop('/'.join(current_loc))
         current_loc.pop()
-        sum_val_dict.pop( current_loc[-1])
+    
+    # if command is cd into directory then append to current_loc for tracking and add file path with corresponding value
     elif command[:4] == "$ cd":
-        #overall_dict = write_value(overall_dict, current_loc + [cmd_pt2],[])
-        sum_val_dict[cmd_pt2] = 0
         current_loc.append(cmd_pt2)
+        sum_val_dict['/'.join(current_loc)] = 0
+
+    # if ls or dir command then do nothing
     elif cmd_pt2 == "ls" or cmd_pt1 == "dir":
         pass
+
+    # else the command output is referencing a file. add file size to size of each directory
     else:
-        #overall_dict = write_value(overall_dict, current_loc + [cmd_pt2], cmd_pt1)
         for key, value in sum_val_dict.items():
-            value += int(cmd_pt1)
-       
+            sum_val_dict[key] = value + int(cmd_pt1)
 
     return current_loc, overall_dict, sum_val_dict
 
@@ -61,16 +38,13 @@ def process_struct(current_loc, command,overall_dict = {},sum_val_dict ={}):
 overall_dict = {}
 loc = []
 sum_val_dict = {}
-counter =0
+
 for line in content.split("\n"):
-    counter +=1
     if line == "$ cd /": line = "$ cd root"
-    print(line)
     loc, overall_dict, sum_val_dict = process_struct(loc, line, overall_dict, sum_val_dict)
-    #print(overall_dict)
-    #if counter == 4: break
-#print(overall_dict)
-print(total)
+
+total.update(sum_val_dict)
+
 # sum all values in each directory
 sum = 0
 for key, value in total.items():
@@ -78,3 +52,10 @@ for key, value in total.items():
         sum +=  value 
 
 print(sum)
+
+# Part 2
+unused_space = 70000000 - total['root']
+space_to_be_freed = 30000000 - unused_space
+
+stats = {k: v for k, v in total.items() if v >= space_to_be_freed}
+print(stats[min(stats, key=stats.get)])
